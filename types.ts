@@ -13,6 +13,7 @@ export type ReplacementSource = "url" | "file" | "soundboard";
 export interface SoundOverride {
     id: string;
     mode: "mute" | "replace";
+    sourceType?: ReplacementSource;
     url: string;
     fileId?: string;
     fileName?: string;
@@ -26,21 +27,25 @@ export function makeOverride(id: string): SoundOverride {
 }
 
 export function getSourceType(override: SoundOverride): ReplacementSource {
+    if (override.sourceType) return override.sourceType;
     if (override.fileId) return "file";
     if (override.soundboardId?.trim()) return "soundboard";
     return "url";
 }
 
 export function getReplacementSource(override: SoundOverride): string | null {
-    if (override.fileId) return audioCache.get(override.fileId) ?? null;
-
-    const soundboardId = override.soundboardId?.trim();
-    if (soundboardId && SOUND_ID_REGEX.test(soundboardId)) {
-        return `https://${window.GLOBAL_ENV.CDN_HOST}/soundboard-sounds/${soundboardId}`;
+    switch (getSourceType(override)) {
+        case "file":
+            return override.fileId ? audioCache.get(override.fileId) ?? null : null;
+        case "soundboard": {
+            const soundboardId = override.soundboardId?.trim();
+            return soundboardId && SOUND_ID_REGEX.test(soundboardId)
+                ? `https://${window.GLOBAL_ENV.CDN_HOST}/soundboard-sounds/${soundboardId}`
+                : null;
+        }
+        default: {
+            const url = parseUrl(override.url.trim());
+            return url?.protocol === "https:" || url?.protocol === "http:" ? url.href : null;
+        }
     }
-
-    const url = parseUrl(override.url.trim());
-    if (url?.protocol === "https:" || url?.protocol === "http:") return url.href;
-
-    return null;
 }

@@ -59,7 +59,7 @@ function OverrideRow({ override, volume, onChange, onRemove }: OverrideRowProps)
         if (type === sourceType) return;
 
         const oldFileId = override.fileId;
-        patch({ url: "", fileId: undefined, fileName: undefined, soundboardId: undefined });
+        patch({ sourceType: type, url: "", fileId: undefined, fileName: undefined, soundboardId: undefined });
         if (oldFileId && type !== "file") {
             deleteAudioFile(oldFileId).catch(error => logger.error("Failed to delete audio file", error));
         }
@@ -104,7 +104,7 @@ function OverrideRow({ override, volume, onChange, onRemove }: OverrideRowProps)
         try {
             const oldFileId = override.fileId;
             const fileId = await saveAudioFile(file);
-            patch({ fileId, fileName: file.name, url: "", soundboardId: undefined });
+            patch({ sourceType: "file", fileId, fileName: file.name, url: "", soundboardId: undefined });
             showToast({ text: "Audio file saved.", variant: "success" });
             if (oldFileId) {
                 deleteAudioFile(oldFileId).catch(error => logger.error("Failed to delete audio file", error));
@@ -117,7 +117,7 @@ function OverrideRow({ override, volume, onChange, onRemove }: OverrideRowProps)
 
     const removeFile = async () => {
         const { fileId } = override;
-        patch({ fileId: undefined, fileName: undefined });
+        patch({ sourceType: "url", fileId: undefined, fileName: undefined });
         if (!fileId) return;
 
         try {
