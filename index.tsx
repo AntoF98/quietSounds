@@ -5,7 +5,6 @@
  */
 
 import { AudioPlayerInterface, playAudio } from "@api/AudioPlayer";
-import { EquicordDevs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin from "@utils/types";
 
@@ -23,7 +22,7 @@ export default definePlugin({
     name: "QuietSounds",
     description: "Locally mute or replace specific soundboard sounds by their sound ID.",
     tags: ["Voice", "Utility"],
-    authors: [EquicordDevs.nobody],
+    authors: [{ name: "AntoF98", id: 247745121355825154n }],
     dependencies: ["AudioPlayerAPI"],
     settings,
 

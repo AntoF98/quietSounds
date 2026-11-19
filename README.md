@@ -34,4 +34,4 @@ GPL-3.0-or-later, like Equicord itself. See [LICENSE](LICENSE).
 
 ## Author
 
-Replace `EquicordDevs.nobody` in `index.tsx` with your own entry in `src/utils/constants.ts` before publishing.
+AntoF98 (Discord ID 247745121355825154).
